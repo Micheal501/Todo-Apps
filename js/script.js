@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
             isCompleted
         }
     }
+
     const todos = [];
     const RENDER_EVENT = 'render-todo';
     document.addEventListener(RENDER_EVENT, function () {
@@ -105,6 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
             return null;
         }
     }
+
     document.addEventListener(RENDER_EVENT, function () {
         const uncompletedTODOList = document.getElementById('todos');
         uncompletedTODOList.innerHTML = '';
@@ -120,6 +122,35 @@ document.addEventListener('DOMContentLoaded', function () {
                 completedTODOList.append(todoElement);
         }
     });
+
+    function removeTaskFromCompleted(todoId) {
+        const todoTarget = findTodoIndex(todoId);
+
+        if (todoTarget === -1) return;
+
+        todos.splice(todoTarget, 1);
+        document.dispatchEvent(new Event(RENDER_EVENT));
+    }
+
+
+    function undoTaskFromCompleted(todoId) {
+        const todoTarget = findTodo(todoId);
+
+        if (todoTarget == null) return;
+
+        todoTarget.isCompleted = false;
+        document.dispatchEvent(new Event(RENDER_EVENT));
+    }
+
+    function findTodoIndex(todoId) {
+        for (const index in todos) {
+            if (todos[index].id === todoId) {
+                return index;
+            }
+        }
+
+        return -1;
+    }
 });
 
 
